@@ -1,4 +1,4 @@
-Telegram bot which calculates the shortest way in Moscow Metro with Dijkstra algorithm. 
+Telegram bot which calculates the shortest path in Moscow Metro with Dijkstra algorithm. 
 Used: aiogram, python, redis.
 Deployed om k8s cluster.
 
