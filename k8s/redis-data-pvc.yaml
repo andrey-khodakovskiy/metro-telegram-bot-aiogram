@@ -1,0 +1,11 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: redis-pod-pvc
+spec:
+  accessModes: [ "ReadOnlyMany" ]
+  storageClassName: local-storage
+  resources:
+   requests:
+     storage: 20Mi
+

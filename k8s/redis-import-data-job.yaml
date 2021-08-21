@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: redis-import-data
+  namespace: metro-telegram-bot
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      containers:
+      - name: import-data-to-redis
+        image: mikejonson/private:import-data-to-redis
+        imagePullPolicy: Always
+        env:
+        - name: REDIS_HOST
+          value: "redis-telegram-bot-service.metro-telegram-bot.svc.cluster.local"
+        - name: REDIS_PORT
+          value: "6379"
+        volumeMounts:
+        - mountPath: "/import-to-redis-pod/data"
+          name: redis-data
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: redis-pod-pvc  
+      imagePullSecrets:
+      - name: docker-mikejonson
+      restartPolicy: OnFailure

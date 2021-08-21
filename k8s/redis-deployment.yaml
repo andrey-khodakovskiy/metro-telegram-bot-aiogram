@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  namespace: metro-telegram-bot
+  labels:
+    app: redis-telegram-bot
+spec:
+  template:
+    metadata:
+      name: redis-telegram-bot
+      labels:
+        app: redis-telegram-bot
+    spec:
+      containers:
+      - name: redis-telegram-bot
+        image: redislabs/rejson:latest
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-telegram-bot

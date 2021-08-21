@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: path-calculation-app-deployment
+  namespace: metro-telegram-bot
+  labels:
+    app: path-calculation-app
+spec:
+  template:
+    metadata:
+      name: path-calculation-app
+      labels:
+        app: path-calculation-app
+    spec:
+      containers:
+      - name: path-calculation-app
+        image: mikejonson/private:path_calculation_app
+        env:
+        - name: REDIS_HOST
+          value: "redis-telegram-bot-service.metro-telegram-bot.svc.cluster.local"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: PORT
+          value: "8001"
+      imagePullSecrets:
+      - name: docker-mikejonson
+  replicas: 1
+  selector:
+    matchLabels:
+      app: path-calculation-app
+
+

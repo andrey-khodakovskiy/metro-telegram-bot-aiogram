@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metro-telegram-bot-deployment
+  namespace: metro-telegram-bot
+  labels:
+    app: metro-telegram-bot
+spec:
+  template:
+    metadata:
+      name: metro-telegram-bot
+      labels:
+        app: metro-telegram-bot
+    spec:
+      containers:
+      - name: metro-telegram-bot
+        image: mikejonson/private:metro_telegram_bot_aiogram
+        imagePullPolicy: Always
+        env:
+        - name: APP_HOST
+          value: "path-calculation-app-service.metro-telegram-bot.svc.cluster.local"
+        - name: APP_PORT
+          value: "8001"
+        envFrom:
+        - secretRef:
+            name: metro-telegram-bot-token
+        volumeMounts:
+        - name: telegram-bot-logs
+          mountPath: "/telegram-bot/logs"
+        - name: timezone-msk
+          mountPath: "/etc/localtime"
+      volumes:
+      - name: telegram-bot-logs
+        persistentVolumeClaim:
+          claimName: metro-telegram-bot-logs-pvc 
+      - name: timezone-msk
+        hostPath:
+          path: "/usr/share/zoneinfo/Europe/Moscow"
+      imagePullSecrets:
+      - name: docker-mikejonson
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metro-telegram-bot

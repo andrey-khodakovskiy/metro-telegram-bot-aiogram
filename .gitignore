@@ -1,0 +1,12 @@
+test_bot_token.txt
+.vscode/settings.json
+import_data_to_redis/.env
+k8s/metro-telegram-bot-test-token-secret.yaml
+k8s/metro-telegram-bot-token-secret.yaml
+path_calculation_app/__pycache__/functions_redis.cpython-38.pyc
+path_calculation_app/__pycache__/main.cpython-38.pyc
+path_calculation_app/.env
+telegram_bot/app/__pycache__/__init__.cpython-38.pyc
+telegram_bot/app/handlers/__pycache__/common.cpython-38.pyc
+telegram_bot/app/handlers/__pycache__/main.cpython-38.pyc
+telegram_bot/.env

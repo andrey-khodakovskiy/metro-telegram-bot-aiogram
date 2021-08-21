@@ -1,0 +1,4 @@
+python-decouple==3.4
+PyYAML==5.4.1
+redis==3.5.3
+rejson==0.5.4
