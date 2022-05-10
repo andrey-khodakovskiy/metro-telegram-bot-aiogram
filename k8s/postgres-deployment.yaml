@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrobot-postgres-deployment
+  namespace: metro-telegram-bot
+  labels:
+      app: metrobot-postgres
+spec:  
+  template:
+    metadata:
+      name: metrobot-postgres
+      labels:
+        app: metrobot-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:14.2
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          env:
+          - name: POSTGRES_USER
+            value: "postgres"
+          - name: POSTGRES_PASSWORD
+            value: "postgres"
+          - name: POSTGRES_DB
+            value: "atletico_db"
+          volumeMounts:
+            - name: postgresdb
+              mountPath: /var/lib/postgresql/data
+            - name: timezone-msk
+              mountPath: "/etc/localtime"
+      volumes:
+        - name: postgresdb
+          persistentVolumeClaim:
+            claimName: metrobot-postgres-pvc
+        - name: timezone-msk
+          hostPath:
+            path: "/usr/share/zoneinfo/Europe/Moscow"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metrobot-postgres

@@ -21,6 +21,16 @@ spec:
           value: "path-calculation-app-service.metro-telegram-bot.svc.cluster.local"
         - name: APP_PORT
           value: "8001"
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "atletico_db"
+        - name: POSTGRES_SVC
+          value: "postgres-service.metro-telegram-bot.svc.cluster.local"
+        - name: POSTGRES_PORT
+          value: "5432"
         envFrom:
         - secretRef:
             name: metro-telegram-bot-token

@@ -1,0 +1,11 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: metrobot-postgres-pvc
+  namespace: metro-telegram-bot
+spec:
+  accessModes: [ "ReadWriteMany" ]
+  storageClassName: local-storage
+  resources:
+   requests:
+     storage: 500Mi

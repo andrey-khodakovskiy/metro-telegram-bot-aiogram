@@ -1,9 +1,12 @@
+import imp
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 import requests
 import logging
+import psycopg2
+from datetime import datetime
 from string import capwords
 from typing import List, Set, Dict, Tuple, Union, Any
 from decouple import config
@@ -11,6 +14,21 @@ from decouple import config
 
 APP_HOST = config("APP_HOST")
 APP_PORT = config("APP_PORT")
+POSTGRES_USER = config("POSTGRES_USER")
+POSTGRES_PASSWORD = config("POSTGRES_PASSWORD")
+POSTGRES_DB = config("POSTGRES_DB")
+POSTGRES_SVC = config("POSTGRES_SVC")
+POSTGRES_PORT = config("POSTGRES_PORT")
+
+postgre_conn = psycopg2.connect(
+    user=POSTGRES_USER,
+    password=POSTGRES_PASSWORD,
+    host=POSTGRES_SVC,
+    port=POSTGRES_PORT,
+    database=POSTGRES_DB,
+)
+postgre_cur = postgre_conn.cursor()
+postgre_insert_query = """ INSERT INTO requests (time, start, finish, name, nickname, telegram_id) VALUES (%s, %s, %s, %s, %s, %s)"""
 
 
 logger = logging.getLogger("bot-conversation")
@@ -181,9 +199,20 @@ async def path_calculation_get_callback(
     markup.add(*buttons)
     await call.message.edit_text(text, reply_markup=markup)
 
-    logger.info(
-        f"От {user_data['start_station']} до {user_data['finish_station']} {call.from_user.full_name} ({call.from_user.username} id: {call.from_user.id})"
+    start, finish, full_name, username, telegram_id = (
+        user_data["start_station"],
+        user_data["finish_station"],
+        call.from_user.full_name,
+        call.from_user.username,
+        call.from_user.id,
     )
+    logger.info(f"От {start} до {finish} {full_name} ({username} id: {telegram_id})")
+
+    postgre_cur.execute(
+        postgre_insert_query,
+        (datetime.now(), start, finish, full_name, username, telegram_id),
+    )
+    postgre_conn.commit()
     await call.answer()
     await state.finish()
 
